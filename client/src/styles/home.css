@@ -34,7 +34,7 @@ body{
 }
 
 .left-vert-menu{
-  width: 20%;
+  min-width: 317px;
   box-sizing: border-box;
   background-color: #c0dbe2;
   display: flex;

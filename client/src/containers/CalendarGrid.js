@@ -3,6 +3,7 @@ import Header from '../components/Header';
 import Hour from '../components/Hour';
 import Tile from '../components/Tile';
 import CalEvent from '../components/CalEvent';
+import AddButton from '../components/AddButton';
 import '../styles/calendar-grid.css';
 
 const tiles = [
@@ -83,7 +84,9 @@ class CalendarGrid extends Component {
           <div className="day">
             {gridTiles}
           </div>
+
         </div>
+        <AddButton />
       </div>
     )
   }
