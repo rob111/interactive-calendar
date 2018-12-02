@@ -4,6 +4,7 @@ import Hour from '../components/Hour';
 import Tile from '../components/Tile';
 import CalEvent from '../components/CalEvent';
 import AddButton from '../components/AddButton';
+import AddEventModal from './AddEventModal';
 import '../styles/calendar-grid.css';
 
 const tiles = [
@@ -15,6 +16,17 @@ const tiles = [
 ]
 
 class CalendarGrid extends Component {
+  constructor(){
+    super();
+    this.state = {
+      tiles: tiles,
+      showModal: false
+    }
+
+    this.addEvent = this.addEvent.bind(this);
+    this.handleOpenModal = this.handleOpenModal.bind(this);
+    this.handleCloseModal = this.handleCloseModal.bind(this);
+  }
 
 
   getWeekDays(){
@@ -42,9 +54,9 @@ class CalendarGrid extends Component {
     return hours;
   }
 
-  renderTile(i, tile){
+  renderTile(i, currentTile){
 
-    let event = tile ? <CalEvent time={tile.time} text={tile.text} color={tile.color} /> : null;
+    let event = currentTile ? <CalEvent time={currentTile.time} text={currentTile.text} color={currentTile.color} /> : null;
 
     return(
       <div key={i} className="event">
@@ -53,7 +65,19 @@ class CalendarGrid extends Component {
         </Tile>
       </div>
     )
+  }
 
+  addEvent(event){
+    this.setState({ tiles: this.state.tiles.concat(event)});
+    this.handleCloseModal();
+  }
+
+  handleOpenModal() {
+    this.setState({ showModal: true });
+  }
+
+  handleCloseModal() {
+    this.setState({ showModal: false });
   }
 
   render(){
@@ -62,7 +86,8 @@ class CalendarGrid extends Component {
     for (var i = 0; i < 168; i++) {
       let x = i % 7;
       let y = Math.floor(i / 7);
-      let event = tiles.find( tile =>  tile.time[0] === x && tile.time[1] === y);
+      console.log(this.state.tiles);
+      let event = this.state.tiles.find( tile =>  tile.time[0] === x && tile.time[1] === y);
       if (event) {
         gridTiles.push(this.renderTile(i, event));
       } else {
@@ -84,9 +109,9 @@ class CalendarGrid extends Component {
           <div className="day">
             {gridTiles}
           </div>
-
         </div>
-        <AddButton />
+        <AddButton showModal={this.handleOpenModal} />
+        <AddEventModal  addEvent={this.addEvent} showModal={this.state.showModal}/>
       </div>
     )
   }

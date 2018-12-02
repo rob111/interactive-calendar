@@ -14,7 +14,7 @@ class AddButton extends Component {
       color: 'white'
     }
     return(
-      <button className="add-button" style={style}>ADD</button>
+      <button className="add-button" onClick={this.props.showModal} style={style}>ADD</button>
     )
   }
 }
