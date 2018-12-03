@@ -30,7 +30,7 @@ class CalendarGrid extends Component {
 
 
   getWeekDays(){
-    let weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    let weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
     let arr = weekDays.map(day => {
       return(
         <Header
@@ -86,7 +86,6 @@ class CalendarGrid extends Component {
     for (var i = 0; i < 168; i++) {
       let x = i % 7;
       let y = Math.floor(i / 7);
-      console.log(this.state.tiles);
       let event = this.state.tiles.find( tile =>  tile.time[0] === x && tile.time[1] === y);
       if (event) {
         gridTiles.push(this.renderTile(i, event));
