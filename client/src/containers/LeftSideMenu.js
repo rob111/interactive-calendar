@@ -11,9 +11,7 @@ class LeftSideMenu extends Component {
         <div className="calendar-area">
           <CalendarComponent />
         </div>
-        <div className="add-calendars">
-          <p>Add calendars</p>
-        </div>
+        
         <div className="special-calendars">
           <p>Special Calendars</p>
         </div>

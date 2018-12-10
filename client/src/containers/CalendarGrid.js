@@ -8,10 +8,10 @@ import AddEventModal from './AddEventModal';
 import '../styles/calendar-grid.css';
 
 const tiles = [
-  {time: [0,0], text: 'first tile', color: 'red'},
-  {time: [2,0], text: 'second tile', color: 'green'},
-  {time: [1,3], text: 'third tile', color: 'lightblue'},
-  {time: [4,6], text: 'forth tile', color: 'blue'},
+  {time: [0,0], text: 'first tile', color: "#7986cb"},
+  {time: [2,0], text: 'second tile', color: '#34b579'},
+  {time: [1,3], text: 'third tile', color: '#e67c74'},
+  {time: [4,6], text: 'forth tile', color: '#7986cb'},
   {time: [0, 23], text: 'fifth tile', color: 'grey'}
 ]
 
@@ -24,17 +24,17 @@ class CalendarGrid extends Component {
     }
 
     this.addEvent = this.addEvent.bind(this);
-    this.handleOpenModal = this.handleOpenModal.bind(this);
-    this.handleCloseModal = this.handleCloseModal.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
   }
 
 
   getWeekDays(){
     let weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    let arr = weekDays.map(day => {
+    let arr = weekDays.map((day, index) => {
       return(
         <Header
           name={day}
+          key={index}
           >
         </Header>
       )
@@ -46,9 +46,9 @@ class CalendarGrid extends Component {
     let hours = [];
     for (var i = 1; i < 24; i++) {
       if (i <= 12) {
-        hours.push(<Hour hour={`${i}am`} />);
+        hours.push(<Hour key={i} hour={`${i}am`} />);
       }else{
-        hours.push(<Hour hour={`${i-12}pm`} />);
+        hours.push(<Hour key={i} hour={`${i-12}pm`} />);
       }
     }
     return hours;
@@ -69,18 +69,15 @@ class CalendarGrid extends Component {
 
   addEvent(event){
     this.setState({ tiles: this.state.tiles.concat(event)});
-    this.handleCloseModal();
+    this.toggleModal();
   }
 
-  handleOpenModal() {
-    this.setState({ showModal: true });
-  }
-
-  handleCloseModal() {
-    this.setState({ showModal: false });
+  toggleModal() {
+    this.setState({ showModal: !this.state.showModal });
   }
 
   render(){
+    console.log(this.state.tiles);
     const gridTiles = [];
 
     for (var i = 0; i < 168; i++) {
@@ -109,8 +106,8 @@ class CalendarGrid extends Component {
             {gridTiles}
           </div>
         </div>
-        <AddButton showModal={this.handleOpenModal} />
-        <AddEventModal  addEvent={this.addEvent} showModal={this.state.showModal}/>
+        <AddButton showModal={this.toggleModal} />
+        {this.state.showModal ? <AddEventModal  addEvent={this.addEvent} toggleModal={this.toggleModal}/> : null}
       </div>
     )
   }
