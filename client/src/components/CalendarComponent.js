@@ -14,7 +14,6 @@ export default class CalendarComponent extends Component {
   onChange = date => this.setState({ date });
 
   render() {
-    console.log(this.state.date);
     return(
       <div>
         <Calendar
