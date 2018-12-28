@@ -5,6 +5,7 @@ import Tile from '../components/Tile';
 import CalEvent from '../components/CalEvent';
 import AddButton from '../components/AddButton';
 import AddEventModal from './AddEventModal';
+import { connect } from 'react-redux';
 import '../styles/calendar-grid.css';
 
 const tiles = [
@@ -16,8 +17,8 @@ const tiles = [
 ]
 
 class CalendarGrid extends Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state = {
       tiles: tiles,
       showModal: false
@@ -29,17 +30,21 @@ class CalendarGrid extends Component {
 
 
   getWeekDays(){
-    let weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    let arr = weekDays.map((day, index) => {
-      return(
-        <Header
-          name={day}
-          key={index}
-          >
-        </Header>
-      )
-    })
-    return arr;
+    const weekdays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
+    if(this.props.dates){
+      let arr = this.props.dates.map((day, index) => {
+        let name = weekdays[day.getDay()];
+        return(
+          <Header
+            name={name}
+            date={day.getDate()}
+            key={index}
+            >
+          </Header>
+        )
+      })
+      return arr;
+    }
   }
 
   getHours(){
@@ -77,7 +82,7 @@ class CalendarGrid extends Component {
   }
 
   render(){
-    console.log(this.state.tiles);
+
     const gridTiles = [];
 
     for (var i = 0; i < 168; i++) {
@@ -113,4 +118,13 @@ class CalendarGrid extends Component {
   }
 }
 
-export default CalendarGrid;
+const mapStateToProps = (state) => {
+  return {
+    dates: state.weeksReducer.datesRange
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(CalendarGrid);
