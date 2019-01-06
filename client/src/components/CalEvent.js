@@ -14,7 +14,19 @@ class CalEvent extends Component {
   render(){
     const {color, text, time } = this.state;
     return(
-      <div style={{color: 'white', background: color, width: 85, height: 25, margin: 'auto'}}>
+      <div
+        className="cal-event"
+        style={{
+          color: 'white',
+          background: color,
+          width: '95%',
+          height: 50,
+          overflowY: 'scroll',
+          top: '0',
+          left: '0',
+          zIndex: '999',
+          position: 'relative'
+        }}>
         {text}
       </div>
     )

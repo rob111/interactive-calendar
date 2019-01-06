@@ -7,13 +7,19 @@ import AddButton from '../components/AddButton';
 import AddEventModal from './AddEventModal';
 import { connect } from 'react-redux';
 import '../styles/calendar-grid.css';
+import moment from 'moment';
+
 
 const tiles = [
-  {time: [0,0], text: 'first tile', color: "#7986cb"},
-  {time: [2,0], text: 'second tile', color: '#34b579'},
-  {time: [1,3], text: 'third tile', color: '#e67c74'},
-  {time: [4,6], text: 'forth tile', color: '#7986cb'},
-  {time: [0, 23], text: 'fifth tile', color: 'grey'}
+  // {time: [0,0], text: 'first tile', color: "#7986cb"},
+  // {time: [2,0], text: 'second tile', color: '#34b579'},
+  // {time: [1,3], text: 'third tile', color: '#e67c74'},
+  // {time: [4,6], text: 'forth tile', color: '#7986cb'},
+  // {time: [0, 23], text: 'fifth tile', color: 'grey'},
+  {time: 10, text: 'New Live Event Event', date: 1546205512675},
+  // {time: 22, text: 'New New Event', date: 1546776786761},
+  {time: 5, text: 'Good Morning on Tuesday January January January January January 8th at five o\'clock', date: 1546773765976},
+  {time: 22, text: 'Just checking January January January January Januaryevent', date: 1546776786761}
 ]
 
 class CalendarGrid extends Component {
@@ -61,7 +67,7 @@ class CalendarGrid extends Component {
 
   renderTile(i, currentTile){
 
-    let event = currentTile ? <CalEvent time={currentTile.time} text={currentTile.text} color={currentTile.color} /> : null;
+    let event = currentTile ? <CalEvent time={currentTile.time} text={currentTile.text} color="#7986cb" /> : null;
 
     return(
       <div key={i} className="event">
@@ -82,13 +88,21 @@ class CalendarGrid extends Component {
   }
 
   render(){
-
+    console.log(moment('Tue Jan 08 2019'));
     const gridTiles = [];
 
     for (var i = 0; i < 168; i++) {
       let x = i % 7;
       let y = Math.floor(i / 7);
-      let event = this.state.tiles.find( tile =>  tile.time[0] === x && tile.time[1] === y);
+      let event = this.state.tiles.find( tile =>  {
+        let currentDate = moment(tile.date);
+        currentDate = currentDate.toDate().toString().substr(0, 15);
+        let dayDate = this.props.dates[x];
+        if (dayDate) {
+          dayDate = dayDate.toString().substr(0, 15);
+        }
+        return tile ? dayDate == currentDate && tile.time === y : null;
+      });
       if (event) {
         gridTiles.push(this.renderTile(i, event));
       } else {

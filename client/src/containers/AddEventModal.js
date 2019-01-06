@@ -115,6 +115,7 @@ class AddEventModal extends React.Component {
       time: this.state.time,
       date: this.state.date
      }
+     
     this.props.addEvent(newEvent);
   }
 
