@@ -5,7 +5,7 @@ class Tile extends Component {
 
   render(){
     return(
-      <div>
+      <div className="tile">
         {this.props.children}
       </div>
     )
