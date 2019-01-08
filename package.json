@@ -1,16 +1,14 @@
 {
   "name": "interactive-calendar",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
+  "repository": "https://github.com/rob111/interactive-calendar.git",
+  "author": "rob111 <andrewboston10@gmail.com>",
   "scripts": {
-    "start": "node index.js"
+    "start": "concurrently \"cd backend && yarn start\" \"cd client && yarn start\""
   },
-  "keywords": [],
-  "author": "",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.16.4",
-    "react-router-dom": "^4.3.1"
+    "concurrently": "^4.1.0"
   }
 }

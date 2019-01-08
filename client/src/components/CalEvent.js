@@ -5,14 +5,13 @@ class CalEvent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      time: this.props.time,
       text: this.props.text,
       color: this.props.color
     }
   }
 
   render(){
-    const {color, text, time } = this.state;
+    const {color, text } = this.state;
     return(
       <div
         className="cal-event"
