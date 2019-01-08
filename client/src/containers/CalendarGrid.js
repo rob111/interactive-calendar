@@ -8,32 +8,47 @@ import AddEventModal from './AddEventModal';
 import { connect } from 'react-redux';
 import '../styles/calendar-grid.css';
 import moment from 'moment';
+import axios from "axios";
 
+  // {time: 10, text: 'New Live Event Event', date: 1546205512675},
+  // {time: 5, text: 'Good Morning on Tuesday January January January January January 8th at five o\'clock', date: 1546773765976},
+  // {time: 22, text: 'Just checking January January January January Januaryevent', date: 1546776786761}
 
-const tiles = [
-  // {time: [0,0], text: 'first tile', color: "#7986cb"},
-  // {time: [2,0], text: 'second tile', color: '#34b579'},
-  // {time: [1,3], text: 'third tile', color: '#e67c74'},
-  // {time: [4,6], text: 'forth tile', color: '#7986cb'},
-  // {time: [0, 23], text: 'fifth tile', color: 'grey'},
-  {time: 10, text: 'New Live Event Event', date: 1546205512675},
-  // {time: 22, text: 'New New Event', date: 1546776786761},
-  {time: 5, text: 'Good Morning on Tuesday January January January January January 8th at five o\'clock', date: 1546773765976},
-  {time: 22, text: 'Just checking January January January January Januaryevent', date: 1546776786761}
-]
 
 class CalendarGrid extends Component {
   constructor(props){
     super(props);
     this.state = {
-      tiles: tiles,
-      showModal: false
+      tiles: [],
+      showModal: false,
+      intervalIsSet: false
     }
 
     this.addEvent = this.addEvent.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
   }
 
+  componentDidMount() {
+    this.getDataFromDb();
+    if (!this.state.intervalIsSet) {
+      let interval = setInterval(this.getDataFromDb, 1000);
+      this.setState({ intervalIsSet: interval });
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.state.intervalIsSet) {
+      clearInterval(this.state.intervalIsSet);
+      this.setState({ intervalIsSet: null });
+    }
+  }
+
+  getDataFromDb = () => {
+    fetch("/api/getEvents")
+      .then(data => data.json())
+      .then(res => this.setState({ tiles: res.data }))
+      .catch(error => console.error("Can't get data from db" + error))
+  }
 
   getWeekDays(){
     const weekdays = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
@@ -79,7 +94,35 @@ class CalendarGrid extends Component {
   }
 
   addEvent(event){
-    this.setState({ tiles: this.state.tiles.concat(event)});
+    let currentIds = this.state.tiles.map(event => event.id);
+    let newId = 0;
+    while (currentIds.includes(newId)){
+      ++newId;
+    }
+
+    let newEvent = null;
+    if (event.date instanceof moment) {
+      let date = event.date.utc().valueOf();
+      newEvent = {
+        id: newId,
+        time: event.time,
+        date: date,
+        text: event.text
+      }
+    } else {
+      newEvent = {
+        id: newId,
+        time: event.time,
+        date: event.date,
+        text: event.text
+      }
+    }
+
+    axios.post("/api/addEvent", {
+      event: newEvent
+    });
+
+    this.setState({ tiles: this.state.tiles.concat(newEvent)});
     this.toggleModal();
   }
 
@@ -87,8 +130,7 @@ class CalendarGrid extends Component {
     this.setState({ showModal: !this.state.showModal });
   }
 
-  render(){
-    console.log(moment('Tue Jan 08 2019'));
+  drawGrid(){
     const gridTiles = [];
 
     for (var i = 0; i < 168; i++) {
@@ -109,6 +151,10 @@ class CalendarGrid extends Component {
         gridTiles.push(this.renderTile(i, null));
       }
     }
+    return gridTiles;
+  }
+
+  render(){
 
     return(
       <div className="calendar-grid">
@@ -122,7 +168,7 @@ class CalendarGrid extends Component {
             {this.getHours()}
           </div>
           <div className="day">
-            {gridTiles}
+            {this.drawGrid()}
           </div>
         </div>
         <AddButton showModal={this.toggleModal} />
