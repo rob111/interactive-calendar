@@ -110,12 +110,14 @@ class AddEventModal extends React.Component {
   handleDateChange = date => this.setState({ date })
 
   handleSubmit = () => {
+    let timeArr = [];
+    timeArr.push(this.state.time);
     let newEvent = {
       text: this.state.name,
-      time: this.state.time,
+      time: timeArr,
       date: this.state.date
      }
-     
+
     this.props.addEvent(newEvent);
   }
 

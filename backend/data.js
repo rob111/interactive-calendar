@@ -7,7 +7,7 @@ const Schema = mongoose.Schema;
 const DataSchema = new Schema(
   {
     id: Number,
-    time: Number,
+    time: Array,
     date: Number,
     text: String
   },

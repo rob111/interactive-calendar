@@ -100,23 +100,14 @@ class CalendarGrid extends Component {
       ++newId;
     }
 
-    let newEvent = null;
-    if (event.date instanceof moment) {
-      let date = event.date.utc().valueOf();
-      newEvent = {
+    let curDate = event.date instanceof moment ? event.date.utc().valueOf() : event.date;
+
+    let newEvent = {
         id: newId,
         time: event.time,
-        date: date,
+        date: curDate,
         text: event.text
       }
-    } else {
-      newEvent = {
-        id: newId,
-        time: event.time,
-        date: event.date,
-        text: event.text
-      }
-    }
 
     axios.post("/api/addEvent", {
       event: newEvent
@@ -143,7 +134,7 @@ class CalendarGrid extends Component {
         if (dayDate) {
           dayDate = dayDate.toString().substr(0, 15);
         }
-        return tile ? dayDate == currentDate && tile.time === y : null;
+        return tile ? dayDate === currentDate && tile.time.includes(y) : null;
       });
       if (event) {
         gridTiles.push(this.renderTile(i, event));
