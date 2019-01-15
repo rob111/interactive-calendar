@@ -39,9 +39,6 @@
   border-right: 1px solid black;
   display: flex;
 }
-.event > div{
-  margin: auto;
-}
 
 .header{
   width: 1100px;

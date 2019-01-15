@@ -1,0 +1,41 @@
+.cal-event {
+  display: flex;
+  /* min-height: 100%; */
+  width: 140px;
+  border-radius: 5px;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  color: #fff;
+  flex-direction: column;
+}
+.resizer-height {
+ height: 8px;
+ margin: auto;
+ position: relative;
+ cursor: row-resize;
+ flex-shrink: 0;
+}
+.resizer-height::after,
+.resizer-height::before {
+  content: "";
+  border-top: 1px solid #333;
+  position: absolute;
+  right: 50%;
+  transform: translateX(50%);
+  bottom: 0;
+  flex-direction: column;
+  width: 20px;
+  margin: 2px 0;
+}
+.resizer-height::before {
+  top: 0;
+}
+.cal-event-tile {
+  height: calc(100% - 10px);
+  display: flex;
+}
+
+.cal-event-tile p {
+  margin: auto;
+}
