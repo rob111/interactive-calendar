@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+// import axios from 'axios';
+import { connect } from 'react-redux';
+import { updateEvent } from '../modules/eventsReducer';
 import '../styles/cal-event-styles.css';
 
 
@@ -7,11 +10,12 @@ class CalEvent extends Component {
     super(props);
     this.state = {
       isDragging: false,
-      height: 43,
+      id: this.props.id,
+      time: this.props.time,
+      height: this.props.height,
       text: this.props.text,
       color: this.props.color
     }
-    console.log(this.props);
   }
 
   componentDidMount() {
@@ -36,6 +40,7 @@ class CalEvent extends Component {
         isDragging: false,
         height: this.getStep(this.state.height)
       });
+      this.updateEventHeight(this.state.id, this.state.time, this.state.height);
     }
   }
 
@@ -55,10 +60,22 @@ class CalEvent extends Component {
     return text.length > 10 && height <= 100 ? text.substring(0, 14) + "..." : text;
   }
 
+  updateEventHeight(id, time, height) {
+    let ones = Math.floor(height / 43);
+    let arr = [];
+    let firstElement = time[0];
+    arr.push(firstElement);
+    for(let i = 1; i < ones; i++) {
+      arr.push(firstElement + i);
+    }
+    let updates = { $set: { time: arr}};
+    let newId = {_id : id};
+    this.props.updateEvent(newId, updates);
+  }
   render(){
     const {color, height} = this.state;
     return(
-      <div className="cal-event"  style={{height: `${height}px`, background: color}}>
+      <div className="cal-event"  style={{height: `${height}px`, background: color }}>
         <div className="cal-event-tile"><p>{this.formatText()}</p></div>
         <div className="resizer-height" onMouseDown={e => this.startResize(e)} onMouseUp={() => this.stopResize()}></div>
       </div>
@@ -66,4 +83,13 @@ class CalEvent extends Component {
   }
 }
 
-export default CalEvent;
+const mapDispatchToProps = dispatch => {
+  return {
+    updateEvent: (id, updates) => dispatch(updateEvent(id, updates))
+  }
+}
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(CalEvent);

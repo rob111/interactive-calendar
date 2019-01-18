@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 class AddButton extends Component {
   render(){
     const style = {
-      position: 'fixed',
+      position: 'absolute',
       width: 70,
       height: 70,
       borderRadius: '50%',

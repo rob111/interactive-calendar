@@ -1,11 +1,11 @@
 .cal-event {
   display: flex;
-  /* min-height: 100%; */
+  min-height: 43px;
   width: 140px;
   border-radius: 5px;
   top: 0;
   left: 0;
-  z-index: 999;
+  z-index: 2;
   color: #fff;
   flex-direction: column;
 }
