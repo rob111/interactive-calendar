@@ -5,33 +5,33 @@ import Tile from '../components/Tile';
 import CalEvent from '../components/CalEvent';
 import AddButton from '../components/AddButton';
 import AddEventModal from './AddEventModal';
+
 import { connect } from 'react-redux';
+import { getEvents, postEvent } from '../modules/eventsReducer';
+
 import '../styles/calendar-grid.css';
 import moment from 'moment';
-import axios from "axios";
-
-  // {time: 10, text: 'New Live Event Event', date: 1546205512675},
-  // {time: 5, text: 'Good Morning on Tuesday January January January January January 8th at five o\'clock', date: 1546773765976},
-  // {time: 22, text: 'Just checking January January January January Januaryevent', date: 1546776786761}
+// import axios from "axios";
 
 
 class CalendarGrid extends Component {
   constructor(props){
     super(props);
     this.state = {
-      tiles: [],
+      tiles: this.props.tiles,
       showModal: false,
       intervalIsSet: false
     }
 
     this.addEvent = this.addEvent.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
+
   }
 
   componentDidMount() {
-    this.getDataFromDb();
+    this.props.getEvents();
     if (!this.state.intervalIsSet) {
-      let interval = setInterval(this.getDataFromDb, 1000);
+      let interval = setInterval(this.props.getEvents, 1000);
       this.setState({ intervalIsSet: interval });
     }
   }
@@ -41,13 +41,6 @@ class CalendarGrid extends Component {
       clearInterval(this.state.intervalIsSet);
       this.setState({ intervalIsSet: null });
     }
-  }
-
-  getDataFromDb = () => {
-    fetch("/api/getEvents")
-      .then(data => data.json())
-      .then(res => this.setState({ tiles: res.data }))
-      .catch(error => console.error("Can't get data from db" + error))
   }
 
   getWeekDays(){
@@ -81,8 +74,15 @@ class CalendarGrid extends Component {
   }
 
   renderTile(i, currentTile){
-
-    let event = currentTile ? <CalEvent time={currentTile.time} text={currentTile.text} color="#7986cb" /> : null;
+    let event = currentTile
+    ? <CalEvent
+        id={currentTile._id}
+        time={currentTile.time}
+        height={currentTile.time.length * 43}
+        text={currentTile.text}
+        color="#7986cb"
+        />
+    : null;
 
     return(
       <div key={i} className="event">
@@ -94,7 +94,7 @@ class CalendarGrid extends Component {
   }
 
   addEvent(event){
-    let currentIds = this.state.tiles.map(event => event.id);
+    let currentIds = this.props.tiles.map(event => event.id);
     let newId = 0;
     while (currentIds.includes(newId)){
       ++newId;
@@ -109,11 +109,7 @@ class CalendarGrid extends Component {
         text: event.text
       }
 
-    axios.post("/api/addEvent", {
-      event: newEvent
-    });
-
-    this.setState({ tiles: this.state.tiles.concat(newEvent)});
+    this.props.postEvent(newEvent);
     this.toggleModal();
   }
 
@@ -123,18 +119,27 @@ class CalendarGrid extends Component {
 
   drawGrid(){
     const gridTiles = [];
+    let insertedEvents = [];
 
     for (var i = 0; i < 168; i++) {
       let x = i % 7;
       let y = Math.floor(i / 7);
-      let event = this.state.tiles.find( tile =>  {
-        let currentDate = moment(tile.date);
-        currentDate = currentDate.toDate().toString().substr(0, 15);
-        let dayDate = this.props.dates[x];
-        if (dayDate) {
-          dayDate = dayDate.toString().substr(0, 15);
-        }
-        return tile ? dayDate === currentDate && tile.time.includes(y) : null;
+      let event = this.props.tiles.find( tile =>  {
+       if (tile !== undefined) {
+          let currentDate = moment(tile.date);
+          currentDate = currentDate.toDate().toString().substr(0, 15);
+          let dayDate = this.props.dates[x];
+          if (dayDate) {
+            dayDate = dayDate.toString().substr(0, 15);
+          }
+
+          if ((dayDate === currentDate && tile.time.includes(y)) && !insertedEvents.includes(tile)) {
+            insertedEvents.push(tile);
+            return tile;
+          }else {
+            return null;
+          }
+       }
       });
       if (event) {
         gridTiles.push(this.renderTile(i, event));
@@ -146,7 +151,6 @@ class CalendarGrid extends Component {
   }
 
   render(){
-
     return(
       <div className="calendar-grid">
         <div className="header">
@@ -171,11 +175,19 @@ class CalendarGrid extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    dates: state.weeksReducer.datesRange
+    dates: state.weeksReducer.datesRange,
+    tiles: state.eventsReducer.tiles
   };
 };
 
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getEvents: () => dispatch(getEvents()),
+    postEvent: (eventData) => dispatch(postEvent(eventData))
+  }
+}
+
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(CalendarGrid);

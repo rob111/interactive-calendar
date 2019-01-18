@@ -42,8 +42,7 @@ router.get("/getEvents", (req, res) => {
 
 router.post("/addEvent", (req, res) => {
   let data = new Data();
-
-  const { id, time, date, text } = req.body.event;
+  const { id, time, date, text } = req.body;
 
   if ((!id && id !== 0) || !text) {
     return res.json({
@@ -51,7 +50,7 @@ router.post("/addEvent", (req, res) => {
       error: "INVALID INPUTS"
     });
   }
-  console.log(data);
+
   data.id = id;
   data.time = time;
   data.date = date;
@@ -62,39 +61,21 @@ router.post("/addEvent", (req, res) => {
   });
 });
 
+//update method
+router.post("/updateEvent", (req, res) => {
+  const { id, update } = req.body;
+
+  Data.findOneAndUpdate(id, update)
+  .then(doc => {
+    res.send(doc);
+  })
+  .catch(err => {
+    console.log(err);
+  })
+});
+
 //append /api for our http requests
 app.use("/api", router);
 
 //launch our backend into a port
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));
-
-
-
-
-
-
-
-
-
-
-
-// // Serve the static files from the React app
-// app.use(express.static(path.join(__dirname, 'client/build')));
-//
-// // An api endpoint that returns a short list of items
-// app.get('/api/getList', (req,res) => {
-//     var list = ["item1", "item2", "item3"];
-//     res.json(list);
-//     console.log('Sent list of items');
-// });
-//
-// // Handles any requests that don't match the ones above
-// app.get('*', (req,res) =>{
-//     res.sendFile(path.join(__dirname+'/client/build/index.html'));
-// });
-//
-// const port = process.env.PORT || 5000;
-// app.listen(port);
-//
-//
-// console.log('App is listening on port ' + port);
