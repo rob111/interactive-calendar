@@ -7,7 +7,7 @@ const initialState = {
 const eventsReducer = (state = initialState, action) => {
   switch (action.type) {
     case GET_EVENTS_REQUEST:
-      return {...state, isFetching: true};
+      return { ...state, isFetching: true };
     case GET_EVENTS_REQUEST_SUCCESS:
       return {...state,
         tiles: action.events,
@@ -26,9 +26,13 @@ const eventsReducer = (state = initialState, action) => {
     case UPDATE_EVENT_REQUEST:
       return {...state, isFetching: true};
     case UPDATE_EVENT_REQUEST_SUCCESS:
-      return {...state,
-        isFetching: false
-      };
+      return {...state, isFetching: false};
+    case DELETE_EVENT_REQUEST:
+      return {...state, isFetching: true };
+    case DELETE_EVENT_REQUEST_SUCCESS:
+      return {...state, isFetching: false };
+    case DELETE_EVENT_REQUEST_FAILURE:
+      return {...state, isFetching: false};
     default:
       return state;
   }
@@ -178,9 +182,62 @@ const updateEvent = (id, updates) => {
   }
 }
 
+const DELETE_EVENT_REQUEST = 'DELETE_EVENT_REQUEST';
+
+const deleteEventRequest = () => {
+  return {
+    type: DELETE_EVENT_REQUEST
+  };
+};
+
+const DELETE_EVENT_REQUEST_SUCCESS = 'DELETE_EVENT_REQUEST_SUCCESS';
+
+const deleteEventRequestSuccess = (events) => {
+  return {
+    type: DELETE_EVENT_REQUEST_SUCCESS,
+    events: events
+  };
+};
+
+const DELETE_EVENT_REQUEST_FAILURE = 'DELETE_EVENT_REQUEST_FAILURE';
+
+const deleteEventRequestFailure = () => {
+  return {
+    type: DELETE_EVENT_REQUEST_FAILURE
+  };
+};
+
+const deleteEvent = (id) => {
+  console.log("I am inside deleteEvent Reducer");
+  return dispatch => {
+    dispatch(deleteEventRequest)
+
+    return fetch("/api/deleteEvent" , {
+      method: "DELETE",
+      headers: {"Content-Type" : "application/json"},
+      body: JSON.stringify(id)
+    })
+    .then(res => {
+      if (res.ok) {
+        return res.json();
+      }else {
+        dispatch(deleteEventRequestFailure());
+        // dispatch(displayAlertMessage("Didn't add new event. Something went wrong."))
+        return { error: 'Something went wrong.'}
+      }
+    })
+    .then(event => {
+      if(!event.error) {
+        dispatch(deleteEventRequestSuccess(event))
+      }
+    })
+  }
+}
+
 export {
   eventsReducer,
   getEvents,
   postEvent,
-  updateEvent
+  updateEvent,
+  deleteEvent
 };

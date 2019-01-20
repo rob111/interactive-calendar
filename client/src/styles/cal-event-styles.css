@@ -9,6 +9,8 @@
   color: #fff;
   flex-direction: column;
 }
+
+
 .resizer-height {
  height: 8px;
  margin: auto;
@@ -24,7 +26,6 @@
   right: 50%;
   transform: translateX(50%);
   bottom: 0;
-  flex-direction: column;
   width: 20px;
   margin: 2px 0;
 }
@@ -32,10 +33,15 @@
   top: 0;
 }
 .cal-event-tile {
-  height: calc(100% - 10px);
-  display: flex;
+  margin: 10px;
+  line-height: 1.65;
 }
 
 .cal-event-tile p {
-  margin: auto;
+  display: inline;
+}
+
+.cal-event-body {
+  height: calc(100% - 10px);
+  display: inline;
 }
