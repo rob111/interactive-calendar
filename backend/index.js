@@ -61,7 +61,7 @@ router.post("/addEvent", (req, res) => {
   });
 });
 
-//update method
+
 router.post("/updateEvent", (req, res) => {
   const { id, update } = req.body;
 
@@ -71,11 +71,25 @@ router.post("/updateEvent", (req, res) => {
   })
   .catch(err => {
     console.log(err);
-  })
+  });
 });
 
-//append /api for our http requests
+
+router.delete("/deleteEvent", (req, res) => {
+  const id = req.body;
+  
+  Data.findOneAndDelete(id)
+  .then(doc => {
+    res.send(doc);
+  })
+  .catch(err => {
+    console.log(err);
+  });
+});
+
+
+
 app.use("/api", router);
 
-//launch our backend into a port
+
 app.listen(API_PORT, () => console.log(`LISTENING ON PORT ${API_PORT}`));

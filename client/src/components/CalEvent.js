@@ -1,9 +1,22 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import Close from '@material-ui/icons/Close';
+import compose from 'recompose/compose';
 // import axios from 'axios';
 import { connect } from 'react-redux';
-import { updateEvent } from '../modules/eventsReducer';
+import { updateEvent, deleteEvent } from '../modules/eventsReducer';
 import '../styles/cal-event-styles.css';
 
+const styles = theme => ({
+  closeIcon: {
+    cursor: 'pointer',
+    float: 'right',
+    marginRight: 2,
+    alignSelf: 'flex-end',
+    width: '20px'
+  }
+})
 
 class CalEvent extends Component {
   constructor(props) {
@@ -16,6 +29,8 @@ class CalEvent extends Component {
       text: this.props.text,
       color: this.props.color
     }
+
+    this.deleteCalEvent = this.deleteCalEvent.bind(this);
   }
 
   componentDidMount() {
@@ -72,11 +87,21 @@ class CalEvent extends Component {
     let newId = {_id : id};
     this.props.updateEvent(newId, updates);
   }
+
+  deleteCalEvent() {
+    let newId = {_id : this.state.id};
+    this.props.deleteEvent(newId);
+  }
+
   render(){
     const {color, height} = this.state;
+    const { classes } = this.props;
     return(
       <div className="cal-event"  style={{height: `${height}px`, background: color }}>
-        <div className="cal-event-tile"><p>{this.formatText()}</p></div>
+        <div className="cal-event-body">
+          <Close className={classes.closeIcon} onClick={this.deleteCalEvent} />
+          <div className="cal-event-tile"><p>{this.formatText()}</p></div>
+        </div>
         <div className="resizer-height" onMouseDown={e => this.startResize(e)} onMouseUp={() => this.stopResize()}></div>
       </div>
     )
@@ -85,11 +110,19 @@ class CalEvent extends Component {
 
 const mapDispatchToProps = dispatch => {
   return {
-    updateEvent: (id, updates) => dispatch(updateEvent(id, updates))
+    updateEvent: (id, updates) => dispatch(updateEvent(id, updates)),
+    deleteEvent: (id) => dispatch(deleteEvent(id))
   }
 }
 
-export default connect(
-  null,
-  mapDispatchToProps
+CalEvent.propTypes = {
+  classes: PropTypes.object.isRequired
+}
+
+export default compose(
+  connect(
+    null,
+    mapDispatchToProps
+  ),
+  withStyles(styles)
 )(CalEvent);
