@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 import compose from 'recompose/compose';
-// import axios from 'axios';
 import { connect } from 'react-redux';
 import { updateEvent, deleteEvent } from '../modules/eventsReducer';
 import '../styles/cal-event-styles.css';
@@ -72,7 +71,7 @@ class CalEvent extends Component {
 
   formatText = () => {
     const { text, height } = this.state;
-    return text.length > 10 && height <= 100 ? text.substring(0, 14) + "..." : text;
+    return text.length > 10 && height <= 80 ? text.substring(0, 10) + "..." : text;
   }
 
   updateEventHeight(id, time, height) {
