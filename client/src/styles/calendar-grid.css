@@ -9,8 +9,8 @@
 
 #hour-numbers{
   width: 34px;
-  border-right: 1px solid;
-  height: 1020.66px;
+  border-right: 1px solid #A0A096;
+  height: 1045px;
   font-size: 12px;
   display: flex;
   flex-direction: column;
