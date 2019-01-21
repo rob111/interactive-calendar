@@ -9,8 +9,8 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     position: 'absolute',
     borderRadius: '50%',
-    top: 680,
-    left: 1300,
+    top: '80%',
+    left: '90%',
     backgroundColor: '#DB4436',
     zIndex: 2,
     color: 'white'
