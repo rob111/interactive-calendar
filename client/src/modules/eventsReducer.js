@@ -208,7 +208,6 @@ const deleteEventRequestFailure = () => {
 };
 
 const deleteEvent = (id) => {
-  console.log("I am inside deleteEvent Reducer");
   return dispatch => {
     dispatch(deleteEventRequest)
 

@@ -1,7 +1,7 @@
 .container{
   min-width: 1100px;
   height: 600px;
-  background-color: #d3d3d3;
+  background-color: #fff;
   display: flex;
   overflow-y: scroll;
   position: relative;
@@ -33,10 +33,10 @@
   flex-wrap: wrap;
 }
 .event{
-  border-top: 1px solid black;
+  border-top: 1px solid #A0A096;
   height: 4.16%;
   width: 14.19%;
-  border-right: 1px solid black;
+  border-right: 1px solid #A0A096;
   display: flex;
 }
 
@@ -44,6 +44,7 @@
   width: 1100px;
   margin: auto;
   display: flex;
+  background: #fff;
 }
 
 #weekday{

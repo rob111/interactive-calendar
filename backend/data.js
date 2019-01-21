@@ -9,7 +9,8 @@ const DataSchema = new Schema(
     id: Number,
     time: Array,
     date: Number,
-    text: String
+    text: String,
+    color: String
   },
   { timestamps: true }
 );

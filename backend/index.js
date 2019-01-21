@@ -42,7 +42,7 @@ router.get("/getEvents", (req, res) => {
 
 router.post("/addEvent", (req, res) => {
   let data = new Data();
-  const { id, time, date, text } = req.body;
+  const { id, time, date, text, color } = req.body;
 
   if ((!id && id !== 0) || !text) {
     return res.json({
@@ -55,6 +55,7 @@ router.post("/addEvent", (req, res) => {
   data.time = time;
   data.date = date;
   data.text = text;
+  data.color = color;
   data.save(err => {
     if(err) return res.json({ success: false, error: err });
     return res.json({ success: true });
@@ -77,7 +78,7 @@ router.post("/updateEvent", (req, res) => {
 
 router.delete("/deleteEvent", (req, res) => {
   const id = req.body;
-  
+
   Data.findOneAndDelete(id)
   .then(doc => {
     res.send(doc);
