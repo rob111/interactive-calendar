@@ -1,6 +1,6 @@
-const myModule = require('./databaseKeys');
-const user = myModule.user;
-const password = myModule.password;
+// const myModule = require('./databaseKeys');
+// const user = myModule.user;
+// const password = myModule.password;
 
 const express = require('express');
 const path = require('path');
@@ -14,7 +14,7 @@ const app = express();
 const router = express.Router();
 
 // path to our MongoDB
-const dbRoute = `mongodb://${user}:${password}@ds163254.mlab.com:63254/interactive_calendar`;
+const dbRoute = process.env.MONGOLAB_URI;
 
 //connect our back end code with db
 mongoose.connect(
