@@ -13,6 +13,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { DatePicker } from 'material-ui-pickers';
 import { MuiPickersUtilsProvider } from 'material-ui-pickers';
 import MomentUtils from '@date-io/moment';
+import Radio from '@material-ui/core/Radio';
+
 
 
 function getModalStyle() {
@@ -65,7 +67,35 @@ const styles = theme => ({
   },
   textFieldDate: {
     flex: 1,
-  }
+  },
+  rootColor: {
+    marginTop: 15,
+  },
+  greenRadio : {
+    color: '#4CAF50',
+    '&$checked': {
+      color: '#4CAF50',
+    },
+  },
+  deepOrangeRadio : {
+    color: '#FF5722',
+    '&$checked': {
+      color: '#FF5722',
+    },
+  },
+  blueRadio : {
+    color: '#7986cb',
+    '&$checked': {
+      color: '#7986cb',
+    },
+  },
+  amberRadio : {
+    color: '#FFC107',
+    '&$checked': {
+      color: '#FFC107',
+    },
+  },
+  checked: {}
 });
 
 class AddEventModal extends React.Component {
@@ -75,7 +105,8 @@ class AddEventModal extends React.Component {
       open: true,
       name: '',
       date: Date.now(),
-      time: ''
+      time: '',
+      selectedColor: '#7986cb'
     };
   }
 
@@ -115,10 +146,44 @@ class AddEventModal extends React.Component {
     let newEvent = {
       text: this.state.name,
       time: timeArr,
-      date: this.state.date
+      date: this.state.date,
+      color: this.state.selectedColor
      }
 
     this.props.addEvent(newEvent);
+  }
+
+  handleChangeColor = (event) => {
+    this.setState({ selectedColor: event.target.value })
+  }
+
+  addColorRadioButtons() {
+    const { classes } = this.props;
+
+    const colors = [
+      {colorName: 'green', className: classes.greenRadio, colorHex: '#4CAF50'},
+      {colorName: 'amber', className: classes.amberRadio, colorHex: '#FFC107'},
+      {colorName: 'blue', className: classes.blueRadio, colorHex: '#7986cb'},
+      {colorName: 'deepOrange', className: classes.deepOrangeRadio, colorHex: '#FF5722'}
+    ];
+    let radioButtonArr = colors.map((color, i) => {
+      return (
+        <Radio
+          key={i}
+           checked={this.state.selectedColor === color.colorHex}
+           onChange={this.handleChangeColor}
+           value={color.colorHex}
+           name="radio-button"
+           aria-label={color.colorName}
+           classes={{
+             root: color.className,
+             checked: classes.checked,
+           }}
+       />
+      )
+    });
+
+    return radioButtonArr;
   }
 
   render() {
@@ -126,7 +191,6 @@ class AddEventModal extends React.Component {
 
     return (
       <div>
-
         <Modal
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
@@ -169,6 +233,9 @@ class AddEventModal extends React.Component {
                         {this.timeRange()}
                       </Select>
                   </FormControl>
+                </div>
+                <div className={classes.rootColor}>
+                  {this.addColorRadioButtons()}
                 </div>
                 <Button variant="outlined" className={classes.saveButton} onClick={this.handleSubmit}>Save</Button>
               </form>

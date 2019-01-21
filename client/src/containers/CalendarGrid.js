@@ -80,7 +80,7 @@ class CalendarGrid extends Component {
         time={currentTile.time}
         height={currentTile.time.length * 43}
         text={currentTile.text}
-        color="#7986cb"
+        color={currentTile.color}
         />
     : null;
 
@@ -106,7 +106,8 @@ class CalendarGrid extends Component {
         id: newId,
         time: event.time,
         date: curDate,
-        text: event.text
+        text: event.text,
+        color: event.color
       }
 
     this.props.postEvent(newEvent);
